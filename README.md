@@ -1,7 +1,7 @@
 # bpmn-vue-activiti
 
 ## 项目简介
-基于[Vue3.x](https://v3.vuejs.org/guide/introduction.html) + [Vite](https://vitejs.dev/) +[ bpmn-js](https://bpmn.io/toolkit/bpmn-js/) + [element-plus](https://element-plus.gitee.io/#/zh-CN) + tsx 实现的Activiti流程设计器
+基于[Vue3.x](https://v3.vuejs.org/guide/introduction.html) + [Vite](https://vitejs.dev/) +[ bpmn-js](https://bpmn.io/toolkit/bpmn-js/) + [element-plus](https://element-plus.gitee.io/#/zh-CN) + TypeScript 实现的Activiti流程设计器
 
 :smiley:[我是一个活生生的例子](https://yiuman.github.io/bpmn-vue-activiti/)
 
@@ -15,7 +15,7 @@
 
 ## 项目特性
 
-1. 全新的vue技术栈+tsx
+1. 全新的vue技术栈+TypeScript
 2. 全数据驱动的模型组件，实现数据逻辑与组件的完全解耦
 
 
