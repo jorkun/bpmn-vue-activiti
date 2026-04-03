@@ -8,6 +8,7 @@ import {
 import { GroupProperties } from '../index';
 import PrefixLabelSelect from '@/components/prefix-label-select';
 import { ElInput, ElOption } from 'element-plus';
+import { h } from 'vue';
 import { ModdleElement } from '../../type';
 import { BpmnStore } from '../../store';
 
@@ -30,13 +31,10 @@ const USER_OPTIONS = [
   { label: '王五', value: '3' },
 ];
 
-const UserOption: JSX.Element = (
-  <>
-    {USER_OPTIONS.map((item) => {
-      return <ElOption {...item} />;
-    })}
-  </>
-);
+const UserOption = () =>
+  USER_OPTIONS.map((item) => {
+    return h(ElOption, item);
+  });
 
 /**
  * 用户任务属性配置
@@ -54,7 +52,7 @@ export const BpmnUserGroupProperties: GroupProperties = {
       allowCreate: true,
       filterable: true,
       vSlots: {
-        default: (): JSX.Element => UserOption,
+        default: () => UserOption(),
       },
     },
     /**
@@ -67,9 +65,9 @@ export const BpmnUserGroupProperties: GroupProperties = {
       multiple: true,
       allowCreate: true,
       vSlots: {
-        default: (): JSX.Element => UserOption,
+        default: () => UserOption(),
       },
-      getValue(businessObject: ModdleElement): [] {
+      getValue(businessObject: ModdleElement): any[] {
         if (!businessObject.candidateUsers) {
           return [];
         }
@@ -86,7 +84,7 @@ export const BpmnUserGroupProperties: GroupProperties = {
       placeholder: '循环基数',
       type: 'number',
       vSlots: {
-        prepend: (): JSX.Element => <div>循环基数</div>,
+        prepend: () => h('div', '循环基数'),
       },
       predicate(businessObject: ModdleElement): boolean {
         return businessObject.loopCharacteristics;
@@ -119,10 +117,9 @@ export const BpmnUserGroupProperties: GroupProperties = {
      */
     completionCondition: {
       component: ElInput,
-      placeholder:
-        '如：${nrOfCompletedInstances/nrOfInstances >= 0.25} 表示完成数大于等于4分1时任务完成',
+      placeholder: '如：${nrOfCompletedInstances/nrOfInstances >= 0.25} 表示完成数大于等于4分1时任务完成',
       vSlots: {
-        prepend: (): JSX.Element => <div>完成条件</div>,
+        prepend: () => h('div', '完成条件'),
       },
       predicate(businessObject: ModdleElement): boolean {
         return businessObject.loopCharacteristics;
@@ -156,13 +153,11 @@ const LOOP_OPTIONS = [
   { label: '循环事件', value: 'StandardLoop' },
 ];
 
-const LoopOptions: JSX.Element = (
-  <>
-    {LOOP_OPTIONS.map((item) => {
-      return <ElOption {...item} />;
-    })}
-  </>
-);
+const LoopOptions = () =>
+  LOOP_OPTIONS.map((item) => {
+    return h(ElOption, item);
+  });
+
 /**
  * 任务的基本属性配置
  */
@@ -174,7 +169,7 @@ const BaseTaskProperties = {
       component: PrefixLabelSelect,
       prefixTitle: '回路特性',
       vSlots: {
-        default: (): JSX.Element => LoopOptions,
+        default: () => LoopOptions(),
       },
       getValue(businessObject: ModdleElement): string {
         const loopCharacteristics = businessObject.loopCharacteristics;
@@ -195,7 +190,6 @@ const BaseTaskProperties = {
             BpmnStore.updateProperties(shape, {
               loopCharacteristics: null,
             });
-            // delete businessObject.loopCharacteristics;
             break;
           case 'StandardLoop':
             BpmnStore.createElement('bpmn:StandardLoopCharacteristics', 'loopCharacteristics');
@@ -223,9 +217,9 @@ const CommonGroupPropertiesArray = [
 ];
 
 export default {
-  //普通任务
+  // 普通任务
   'bpmn:Task': CommonGroupPropertiesArray,
-  //用户任务
+  // 用户任务
   'bpmn:UserTask': [
     BaseTaskProperties,
     BpmnUserGroupProperties,
@@ -234,18 +228,18 @@ export default {
     ExtensionGroupProperties,
     DocumentGroupProperties,
   ],
-  //接收任务
+  // 接收任务
   'bpmn:ReceiveTask': CommonGroupPropertiesArray,
-  //发送任务
+  // 发送任务
   'bpmn:SendTask': CommonGroupPropertiesArray,
-  //手工任务
+  // 手工任务
   'bpmn:ManualTask': CommonGroupPropertiesArray,
-  //业务规则任务
+  // 业务规则任务
   'bpmn:BusinessRuleTask': CommonGroupPropertiesArray,
-  //服务任务
+  // 服务任务
   'bpmn:ServiceTask': CommonGroupPropertiesArray,
-  //脚本任务
+  // 脚本任务
   'bpmn:ScriptTask': CommonGroupPropertiesArray,
-  //调用任务
+  // 调用任务
   'bpmn:CallActivity': CommonGroupPropertiesArray,
 };

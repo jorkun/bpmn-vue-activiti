@@ -17,8 +17,8 @@ export interface GroupProperties {
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-ignore
-const modules = import.meta.glob('./modules/*.tsx');
+// @ts-ignore
+const modules = import.meta.glob('./modules/*.ts');
 const getBpmnGroupPropertiesConfig = () => {
   const BpmnGroupPropertiesConfig: PropertiesMap<Array<GroupProperties>> = {};
   for (const path in modules) {

@@ -5,7 +5,7 @@ import {
   getElementTypeListenerProperties,
 } from '../common';
 
-//流程数据属性配置数组
+// 流程数据属性配置数组
 const ProcessGroupPropertiesArray = [
   CommonGroupProperties,
   /**
@@ -19,10 +19,10 @@ const ProcessGroupPropertiesArray = [
 ];
 
 export default {
-  //流程
+  // 流程
   'bpmn:Process': ProcessGroupPropertiesArray,
-  //子流程
+  // 子流程
   'bpmn:SubProcess': ProcessGroupPropertiesArray,
-  //转运
+  // 转运
   'bpmn:Transaction': ProcessGroupPropertiesArray,
 };

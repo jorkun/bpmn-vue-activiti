@@ -4,6 +4,7 @@ import {
   DocumentGroupProperties,
 } from '../common';
 import { ElInput } from 'element-plus';
+import { h } from 'vue';
 
 const CommonGroupPropertiesArray = [
   CommonGroupProperties,
@@ -23,15 +24,14 @@ const BpmnGroupBaseProperties = {
       component: ElInput,
       placeholder: '节点ID',
       vSlots: {
-        prepend: (): JSX.Element => <div>节点ID</div>,
+        prepend: () => h('div', '节点ID'),
       },
     },
     name: {
       component: ElInput,
-      // prefix: '节点名称',
       placeholder: '节点名称',
       vSlots: {
-        prepend: (): JSX.Element => <div>节点名称</div>,
+        prepend: () => h('div', '节点名称'),
       },
       getValue: (obj: { categoryValueRef: CategoryValueRef }): string => {
         return obj?.categoryValueRef?.value;
@@ -41,12 +41,12 @@ const BpmnGroupBaseProperties = {
 };
 
 export default {
-  //池
+  // 池
   'bpmn:Participant': CommonGroupPropertiesArray,
-  //分组
+  // 分组
   'bpmn:Group': [BpmnGroupBaseProperties, ExtensionGroupProperties, DocumentGroupProperties],
-  //数据存储
+  // 数据存储
   'bpmn:DataStoreReference': CommonGroupPropertiesArray,
-  //数据对象
+  // 数据对象
   'bpmn:DataObjectReference': CommonGroupPropertiesArray,
 };

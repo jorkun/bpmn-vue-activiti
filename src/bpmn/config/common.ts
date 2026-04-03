@@ -1,4 +1,5 @@
 import { ElFormItem, ElInput, ElOption, ElSelect } from 'element-plus';
+import { h } from 'vue';
 import { FieldDefine } from '@/components/dynamic-binder';
 import { PropertiesMap, GroupProperties } from './index';
 import SubList from '../../components/sublist/SubList';
@@ -14,7 +15,7 @@ const commonProperties: PropertiesMap<FieldDefine> = {
     component: ElInput,
     placeholder: '节点ID',
     vSlots: {
-      prepend: (): JSX.Element => <div>节点ID</div>,
+      prepend: () => h('div', '节点ID'),
     },
     setValue(sourceObject: ModdleElement, key: string, value: string) {
       const isNotNull = value;
@@ -27,10 +28,9 @@ const commonProperties: PropertiesMap<FieldDefine> = {
   },
   name: {
     component: ElInput,
-    // prefix: '节点名称',
     placeholder: '节点名称',
     vSlots: {
-      prepend: (): JSX.Element => <div>节点名称</div>,
+      prepend: () => h('div', '节点名称'),
     },
   },
 };
@@ -98,7 +98,7 @@ const taskTags = Object.keys(TaskNameMapping);
 export const getElementTypeListenerProperties = function (options: {
   name: string;
   icon?: string;
-  //时间类型选项
+  // 时间类型选项
   eventOptions?: Array<{ label: string; value: string }>;
 }): GroupProperties {
   const eventOptions = options.eventOptions || EVENT_OPTIONS;
@@ -121,22 +121,26 @@ export const getElementTypeListenerProperties = function (options: {
             formatter: (row: any, column: any): string => {
               return eventOptions.filter((item) => item.value === row[column.property])[0].label;
             },
-            editComponent: function (scope: any, state: SubListState<any>): JSX.Element {
-              return (
-                <ElFormItem
-                  size="small"
-                  class="sublist-form-item"
-                  label={scope.column.name}
-                  prop={scope.column.property}
-                >
-                  <ElSelect v-model={state.editItem.event}>
-                    {eventOptions.map((option) => {
-                      return (
-                        <ElOption key={option.value} label={option.label} value={option.value} />
-                      );
-                    })}
-                  </ElSelect>
-                </ElFormItem>
+            editComponent: function (scope: any, state: SubListState<any>) {
+              return h(
+                ElFormItem,
+                {
+                  size: 'small',
+                  class: 'sublist-form-item',
+                  label: scope.column.name,
+                  prop: scope.column.property,
+                },
+                () =>
+                  h(
+                    ElSelect,
+                    {
+                      modelValue: state.editItem.event,
+                      'onUpdate:modelValue': (val: any) => {
+                        state.editItem.event = val;
+                      },
+                    },
+                    () => eventOptions.map((option) => h(ElOption, { key: option.value, label: option.label, value: option.value }))
+                  )
               );
             },
           },
@@ -147,22 +151,26 @@ export const getElementTypeListenerProperties = function (options: {
             formatter: (row: any, column: any) => {
               return TYPE_OPTIONS.filter((item) => item.value === row[column.property])[0].label;
             },
-            editComponent: function (scope: any, state: SubListState<any>): JSX.Element {
-              return (
-                <ElFormItem
-                  size="small"
-                  class="sublist-form-item"
-                  label={scope.column.name}
-                  prop={scope.column.property}
-                >
-                  <ElSelect v-model={state.editItem.type}>
-                    {TYPE_OPTIONS.map((option) => {
-                      return (
-                        <ElOption key={option.value} label={option.label} value={option.value} />
-                      );
-                    })}
-                  </ElSelect>
-                </ElFormItem>
+            editComponent: function (scope: any, state: SubListState<any>) {
+              return h(
+                ElFormItem,
+                {
+                  size: 'small',
+                  class: 'sublist-form-item',
+                  label: scope.column.name,
+                  prop: scope.column.property,
+                },
+                () =>
+                  h(
+                    ElSelect,
+                    {
+                      modelValue: state.editItem.type,
+                      'onUpdate:modelValue': (val: any) => {
+                        state.editItem.type = val;
+                      },
+                    },
+                    () => TYPE_OPTIONS.map((option) => h(ElOption, { key: option.value, label: option.label, value: option.value }))
+                  )
               );
             },
           },
@@ -203,7 +211,7 @@ export const getElementTypeListenerProperties = function (options: {
         setValue(businessObject: ModdleElement, key: string, value: []): void {
           const bpmnContext = BpmnStore;
           const moddle = bpmnContext.getModeler().get('moddle');
-          //判断当前活动的模型类型，使用不同类型的标签监听器
+          // 判断当前活动的模型类型，使用不同类型的标签监听器
           const listenerTagName = taskTags.includes(businessObject.$type)
             ? 'activiti:TaskListener'
             : 'activiti:ExecutionListener';
@@ -299,7 +307,7 @@ export const FormGroupProperties: GroupProperties = {
       component: ElInput,
       placeholder: '表单key',
       vSlots: {
-        prepend: (): JSX.Element => <div>表单key</div>,
+        prepend: () => h('div', '表单key'),
       },
     },
     'extensionElements.formProperty': {
@@ -339,7 +347,7 @@ export const FormGroupProperties: GroupProperties = {
       setValue(businessObject: ModdleElement, key: string, value: []): void {
         const bpmnContext = BpmnStore;
         const moddle = bpmnContext.getModeler().get('moddle');
-        //表单数据值对象
+        // 表单数据值对象
         const formProperties = value.map((attr: { id: string; type: string; name: string }) => {
           return moddle.create('activiti:FormProperty', {
             id: attr.id,

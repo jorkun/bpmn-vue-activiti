@@ -4,8 +4,8 @@ import {
   DocumentGroupProperties,
   getElementTypeListenerProperties,
 } from '../common';
-
 import { ElInput, ElOption } from 'element-plus';
+import { h } from 'vue';
 import PrefixLabelSelect from '../../../components/prefix-label-select';
 import { ModdleElement } from '../../type';
 import { BpmnStore } from '../../store';
@@ -16,7 +16,7 @@ const FLOW_TYPE_OPTIONS = [
   { label: '条件顺序流', value: 'condition' },
 ];
 
-//获取顺序流的类型
+// 获取顺序流的类型
 const getSequenceFlowType = (businessObject: ModdleElement) => {
   if (businessObject?.conditionExpression) {
     return 'condition';
@@ -36,7 +36,7 @@ const BaseProperties = {
   ...CommonGroupProperties,
   properties: {
     ...CommonGroupProperties.properties,
-    //条件类型
+    // 条件类型
     'sequenceFlow.type': {
       component: PrefixLabelSelect,
       prefixTitle: '顺序流类型',
@@ -44,13 +44,10 @@ const BaseProperties = {
         return businessObject?.sourceRef?.$type !== 'bpmn:StartEvent';
       },
       vSlots: {
-        default: (): JSX.Element => (
-          <>
-            {FLOW_TYPE_OPTIONS.map((item) => {
-              return <ElOption {...item} />;
-            })}
-          </>
-        ),
+        default: () =>
+          FLOW_TYPE_OPTIONS.map((item) => {
+            return h(ElOption, item);
+          }),
       },
       getValue(businessObject: ModdleElement): string {
         return getSequenceFlowType(businessObject);
@@ -75,10 +72,7 @@ const BaseProperties = {
 
         if (value === 'condition') {
           modeling.updateProperties(line, {
-            conditionExpression: bpmnContext
-              .getModeler()
-              .get('moddle')
-              .create('bpmn:FormalExpression'),
+            conditionExpression: bpmnContext.getModeler().get('moddle').create('bpmn:FormalExpression'),
           });
         }
       },
@@ -87,7 +81,7 @@ const BaseProperties = {
       component: ElInput,
       placeholder: '条件表达式',
       vSlots: {
-        prepend: (): JSX.Element => <div>条件表达式</div>,
+        prepend: () => h('div', '条件表达式'),
       },
       predicate: (businessObject: ModdleElement): boolean => {
         return 'condition' === getSequenceFlowType(businessObject);
@@ -107,7 +101,7 @@ const BaseProperties = {
 };
 
 export default {
-  //顺序流
+  // 顺序流
   'bpmn:SequenceFlow': [
     BaseProperties,
     getElementTypeListenerProperties({
